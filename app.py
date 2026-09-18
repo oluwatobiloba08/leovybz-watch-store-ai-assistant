@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
 import urllib.parse
+import os
 from database import get_catalog
 from chatbot import process_sales_query
 from admin import render_admin_panel, init_owner_config
 
 st.set_page_config(page_title="LEOVYBZ Store", page_icon="🦁", layout="wide")
 
+# Theme styling layout structural script variables
 st.markdown("""
     <style>
     .main-title { font-size:44px !important; font-weight: bold; color: #D4AF37; text-align: center; margin-bottom: 2px; font-family: 'Georgia', serif; }
@@ -34,9 +36,18 @@ with tab_store:
         else:
             for index, watch in catalog_df.iterrows():
                 with st.container(border=True):
-                    st.image(watch['image_path'], use_container_width=True)
+                    
+                    # FIXED IMAGE CHECK MECHANIC:
+                    # Dynamically handles web links vs local uploaded files smoothly
+                    img_path = str(watch['image_path'])
+                    if img_path.startswith("http"):
+                        st.image(img_path, use_container_width=True)
+                    elif os.path.exists(img_path):
+                        st.image(img_path, use_container_width=True)
+                    else:
+                        st.warning("⚠️ Image file could not be loaded")
+                    
                     st.markdown(f"## {watch['name']}")
-                    # Formatted with Naira currency symbol
                     st.markdown(f"**Price:** ₦{watch['price']:,} | **Category:** {watch['category']}")
                     st.write(watch['description'])
                     
@@ -53,29 +64,31 @@ with tab_store:
                         st.markdown(f"### [➡️ Click Here to Open WhatsApp & Complete Order]({whatsapp_href})")
                         st.markdown("---")
                         
-    # --- PART B: CHAT SYSTEM SIDEBAR WINDOW ---
+    # --- PART B: SINGLE-RESPONSE INSTANT ASSISTANT (CLEARS HISTORY) ---
     with col_chat:
         st.subheader("Interactive Assistant")
         
-        if "chat_history" not in st.session_state:
-            st.session_state.chat_history = [
-                {"role": "assistant", "content": "Welcome to LEOVYBZ. I can search our catalog for models, analyze budget items, or guide you through checkout. Type 'recommend' to see flagships!"}
-            ]
-            
-        for msg in st.session_state.chat_history:
-            with st.chat_message(msg["role"]):
-                st.write(msg["content"])
-                
-        if user_msg := st.chat_input("Ask a question about our timepieces..."):
+        # We use simple keys to hold only the single current interaction block
+        if "last_user_msg" not in st.session_state:
+            st.session_state.last_user_msg = ""
+        if "last_bot_reply" not in st.session_state:
+            st.session_state.last_bot_reply = "Welcome to LEOVYBZ. I can search our catalog for models, analyze budget items, or guide you through checkout. Ask me a question below!"
+
+        # Display the single current interaction block cleanly
+        if st.session_state.last_user_msg:
             with st.chat_message("user"):
-                st.write(user_msg)
-            st.session_state.chat_history.append({"role": "user", "content": user_msg})
-            
+                st.write(st.session_state.last_user_msg)
+                
+        with st.chat_message("assistant"):
+            st.write(st.session_state.last_bot_reply)
+                
+        # Handle chat text inputs bar entry trigger
+        if user_msg := st.chat_input("Ask a question about our timepieces..."):
+            # Instantly overwrite previous response keys in system memory state
+            st.session_state.last_user_msg = user_msg
             reply = process_sales_query(user_msg, catalog_df, st.session_state.owner_name)
-            
-            with st.chat_message("assistant"):
-                st.write(reply)
-            st.session_state.chat_history.append({"role": "assistant", "content": reply})
+            st.session_state.last_bot_reply = reply
+            st.rerun()
 
 with tab_admin:
     render_admin_panel()
