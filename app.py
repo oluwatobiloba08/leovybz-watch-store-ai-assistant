@@ -190,8 +190,7 @@ with tab_store:
                 with st.chat_message("user"):
                     st.write(st.session_state.last_user_msg)
             
-            # 🔥 AUTOMATED WHATSAPP ASSISTANT AVATAR THEMING: 
-            # Injects your exact lion badge image asset smoothly onto each chatbot response bubble!
+            # 🔥 COMPLETED CHATBOT RENDER LOOP WITH THE LOGO EMBED:
             with st.chat_message("assistant", avatar=LOGO_URL):
                 st.write(st.session_state.last_bot_reply)
                     
