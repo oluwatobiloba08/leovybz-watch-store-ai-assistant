@@ -8,9 +8,9 @@ from admin import render_admin_panel, init_owner_config
 # 1. PAGE AND THEME STRUCTURE CONFIGS
 st.set_page_config(page_title="LEOVYBZ Store", page_icon="🦁", layout="wide")
 
-# 🔥 DIRECT WEB LOGO LINK INTEGRATION (No manual file generation required!)
-# Your exact golden lion LEO VYBZ logo is now streamed directly into the program pipeline
-LOGO_URL = "https://ibb.co"
+# 🔥 FIXED DIRECT UNBLOCKABLE LOGO URL:
+# Points directly to the raw, high-definition gold lion image asset file 
+LOGO_URL = "https://imgbox.com"
 
 # 🔥 ADVANCED CUSTOM CSS INJECTION: SOLID LUXURY DEEP BLACK THEME
 st.markdown("""
@@ -56,7 +56,7 @@ st.markdown("""
         margin-bottom: 30px !important;
     }
     
-    /* 🔥 FORCED SOLID BLACK CHAT BUBBLES BLOCK CONFIGURATIONS */
+    /* FORCED SOLID BLACK CHAT BUBBLES BLOCK CONFIGURATIONS */
     [data-testid="stChatMessage"] {
         background-color: #000000 !important; /* Forces USER and ASSISTANT bubbles to pure black */
         border: 1px solid #333333 !important;
@@ -66,7 +66,7 @@ st.markdown("""
         margin-bottom: 12px !important;
     }
     
-    /* 🔥 ULTRA-STRICT READABILITY FIX FOR THE CHAT INPUT BAR FIELD */
+    /* ULTRA-STRICT READABILITY FIX FOR THE CHAT INPUT BAR FIELD */
     div[data-testid="stChatInput"] {
         background-color: #000000 !important;
         border-radius: 10px !important;
@@ -120,10 +120,10 @@ tab_store, tab_admin = st.tabs(["🛒 LEOVYBZ Customer Portal", "⚙️ Owner Ma
 # ========================================================
 with tab_store:
     st.markdown("---")
-    col_header_left, col_header_right = st.columns([1, 5])
+    col_header_left, col_header_right = st.columns([1, 4])
     with col_header_left:
-        # Automatically streams your dynamic logo from the web URL with no manual folder files needed!
-        st.image(LOGO_URL, use_container_width=True)
+        # Automatically streams your dynamic logo from the new direct unblockable web URL link
+        st.image(LOGO_URL, width=150)
     with col_header_right:
         st.markdown('<div class="main-title">LEO VYBZ TIMEPIECES</div>', unsafe_allow_html=True)
         st.markdown('<div class="sub-title">IKORODU OUTLET — PREMIUM AUTOMATICS & CHRONOGRAPHS</div>', unsafe_allow_html=True)
@@ -190,7 +190,7 @@ with tab_store:
                 with st.chat_message("user"):
                     st.write(st.session_state.last_user_msg)
             
-            # 🔥 COMPLETED CHATBOT RENDER LOOP WITH THE LOGO EMBED:
+            # 🔥 AUTOMATED LOGO AVATAR EMBED: 
             with st.chat_message("assistant", avatar=LOGO_URL):
                 st.write(st.session_state.last_bot_reply)
                     
